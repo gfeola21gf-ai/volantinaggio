@@ -1,0 +1,622 @@
+/* styles.css — Volantinaggio, nello stile di LEARNIS Mind:
+   fondo bianco o scuro secondo il tema del telefono, azzurro del sito, titoli in Barlow Condensed,
+   «il mio perché» in corsivo Instrument Serif (come «Find your method»). Pensato per iPhone SE (375×667). */
+:root {
+  --fondo: #FFFFFF; --pannello: #FFFFFF; --linea: #E2E8F0; --testo: #14213D; --tenue: #64748B;
+  --accento: #0A6FC2; --accento-testo: #FFFFFF; --ok: #16A06A; --avv: #B7791F; --rosso: #D9483B; --chip: #EEF4FB;
+  --ombra: 0 6px 18px rgba(20, 33, 61, .14);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #0C1322; --pannello: #141E31; --linea: #24324A; --testo: #E8EEF7; --tenue: #8B9AB3;
+    --accento: #3D9BEA; --accento-testo: #FFFFFF; --ok: #3CC48A; --avv: #F0B93E; --rosso: #F07467; --chip: #1A2944;
+    --ombra: 0 6px 18px rgba(0, 0, 0, .45);
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* lo schermo è FISSO: barra in alto e schede in basso stanno ferme, scorre solo .corpo
+   (così su iPhone il "rimbalzo" dello scorrimento non si porta dietro la barra delle schede) */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+html { background: var(--fondo); }
+body { margin: 0; background: var(--fondo); color: var(--testo); font-family: Barlow, system-ui, sans-serif; font-size: 16px;
+  line-height: 1.35; -webkit-text-size-adjust: 100%; }
+#app { position: fixed; inset: 0; display: flex; flex-direction: column; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; padding: 0; text-align: inherit; }
+button:disabled { cursor: default; }
+input, textarea, select { font: inherit; font-size: 16px; color: var(--testo); }
+a { color: var(--accento); }
+:focus-visible { outline: 2px solid var(--accento); outline-offset: 2px; }
+.caricamento { padding: 40px; text-align: center; color: var(--tenue); }
+.tenue { color: var(--tenue); font-size: 14px; }
+.piccolo-testo { font-size: 13px; }
+.link { color: var(--accento); text-decoration: underline; font-size: inherit; }
+.errore { color: var(--rosso); font-size: 14px; min-height: 1em; margin: 6px 0 0; }
+
+/* ---------- barra in alto ---------- */
+.barra { flex: 0 0 auto; position: relative; z-index: 5; display: flex; align-items: center; gap: 8px; background: var(--fondo);
+  padding: 10px 16px 8px; padding-top: max(10px, env(safe-area-inset-top)); }
+.barra h1 { flex: 1; min-width: 0; margin: 0; font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 27px; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barra .piccolo { display: block; font-family: Barlow, sans-serif; font-size: 12px; font-weight: 600; color: var(--tenue); margin-bottom: 3px;
+  overflow: hidden; text-overflow: ellipsis; }
+.icona { flex: 0 0 38px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--linea); background: var(--pannello);
+  display: grid; place-items: center; color: var(--testo); }
+.icona .ic { width: 20px; height: 20px; }
+.icona:disabled { opacity: .35; }
+.icona.piccola { flex-basis: 34px; width: 34px; height: 34px; font-size: 14px; }
+.rete { font-size: 12px; font-weight: 700; color: var(--tenue); white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; }
+.rete .ic { width: 16px; height: 16px; }
+.rete.off { color: var(--avv); }
+.rete.prova { background: var(--avv); color: #fff; padding: 2px 7px; border-radius: 99px; }
+
+/* ---------- corpo e schede in basso ---------- */
+.corpo { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain;
+  padding: 4px max(16px, calc(50% - 304px)) calc(24px + env(safe-area-inset-bottom)); }
+.corpo.con-grande { padding-bottom: 90px; }
+.schede { flex: 0 0 auto; display: flex; background: var(--pannello); border-top: 1px solid var(--linea);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
+.schede button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11.5px; font-weight: 700; color: var(--tenue); padding: 2px 0; }
+.schede button .ic { width: 24px; height: 24px; }
+.schede button.on { color: var(--accento); }
+/* tocco sulla scheda attiva: la pagina vecchia scivola via a destra (indietroDiLato) */
+.pagina-via { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; flex-direction: column; background: var(--fondo);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, .18); pointer-events: none; }
+.grande { position: fixed; display: flex; align-items: center; justify-content: center; gap: 8px; left: 16px; right: 16px; bottom: calc(70px + env(safe-area-inset-bottom)); z-index: 6; height: 54px;
+  border-radius: 16px; background: var(--accento); color: var(--accento-testo); font-size: 18px; font-weight: 700; text-align: center;
+  box-shadow: var(--ombra); max-width: 608px; margin: 0 auto; }
+
+.sez { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tenue); margin: 20px 0 8px;
+  display: flex; gap: 8px; align-items: baseline; }
+.sez .link { text-transform: none; letter-spacing: 0; font-size: 13px; }
+
+/* ---------- card ---------- */
+.card { display: flex; gap: 12px; align-items: center; width: 100%; background: var(--pannello); border: 1px solid var(--linea);
+  border-radius: 16px; padding: 10px 12px; margin-bottom: 8px; }
+.card .testo { flex: 1; min-width: 0; display: block; }
+.card .nome, .od .nome, .riga-membro .nome { display: block; font-weight: 700; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .sotto, .od .sotto, .riga-membro .sotto { display: block; font-size: 13.5px; color: var(--tenue); margin-top: 1px; }
+.card .quando { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.card .freccia, .ic.freccia { color: var(--tenue); width: 20px; height: 20px; }
+.card .quando { display: inline-flex; align-items: center; gap: 3px; }
+.card .quando .ic { width: 14px; height: 14px; }
+.card.classe { padding: 14px; }
+.scade { color: var(--rosso); } .oggi { color: var(--accento); }
+.tondo { flex: 0 0 46px; width: 46px; height: 46px; border-radius: 50%; background: var(--chip); display: grid; place-items: end center; overflow: hidden; }
+.chip { display: inline-flex; align-items: center; gap: 3px; vertical-align: 1px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--chip); color: var(--testo); white-space: nowrap; }
+.chip.acc { background: var(--accento); color: var(--accento-testo); }
+.chip .ic { width: 13px; height: 13px; }
+.chip.avv { background: transparent; border: 1px dashed var(--avv); color: var(--avv); }
+.chip-btn { padding: 9px 16px; border-radius: 99px; font-weight: 700; font-size: 15px; }
+
+/* ---------- piantine ---------- */
+.pianta { display: inline-block; width: 64px; height: 72px; flex-shrink: 0; }
+.pianta svg { display: block; width: 100%; height: 100%; }
+.pianta svg.grigia { filter: grayscale(1); opacity: .55; }
+.pianta.mini { width: 42px; height: 47px; margin-top: 2px; }
+.pianta.micro { width: 18px; height: 20px; }
+.nuova .pianta, .pianta.nuova, .orto .nuova .pianta { animation: spunta .9s cubic-bezier(.2, 1.6, .4, 1) both; transform-origin: 50% 100%; }
+@keyframes spunta { 0% { transform: scale(.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* ---------- il mio perché ---------- */
+.perche { display: block; width: 100%; background: var(--accento); color: #fff; border-radius: 16px; padding: 12px 14px; margin: 4px 0 10px;
+  font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.2; }
+.perche b { display: block; font-family: Barlow, sans-serif; font-style: normal; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255, 255, 255, .8); margin-bottom: 4px; }
+.vuoto-perche { font-family: Barlow, sans-serif; font-style: normal; font-size: 15px; }
+.perche-passo .passi { display: flex; gap: 6px; margin: 4px 0; }
+.passi i { flex: 1; height: 6px; border-radius: 3px; background: var(--chip); }
+.passi i.on { background: var(--accento); }
+.pianta-centro { width: 100px; height: 112px; margin: 14px auto 0; }
+.domanda { font-family: "Barlow Condensed", sans-serif; font-size: 28px; line-height: 1.1; font-weight: 700; margin: 10px 0 12px; }
+
+/* ---------- interruttore lista / orto ---------- */
+.striscia { display: flex; align-items: center; gap: 8px; width: 100%; background: var(--chip); border-radius: 12px; padding: 10px 12px; font-weight: 700; color: var(--accento); margin-bottom: 10px; }
+.interruttore { display: flex; background: var(--chip); border-radius: 12px; padding: 3px; margin: 2px 0 6px; }
+.interruttore button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 0; border-radius: 10px; font-weight: 700; font-size: 15px; color: var(--tenue); }
+.interruttore button.on { background: var(--pannello); color: var(--testo); box-shadow: 0 1px 4px rgba(0, 0, 0, .12); }
+.conta-stadi { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13.5px; color: var(--tenue); margin: 10px 2px; }
+.conta-stadi span { display: inline-flex; align-items: center; gap: 3px; }
+.conta-stadi b { color: var(--testo); }
+.conta-stadi .ic { width: 18px; height: 18px; }
+.orto { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--chip); border-radius: 18px; padding: 10px 6px; }
+.orto button { display: flex; flex-direction: column; align-items: center; font-size: 13.5px; font-weight: 600; padding: 4px 0;
+  overflow: hidden; text-overflow: ellipsis; }
+.orto .pianta { width: 72px; height: 80px; }
+
+/* ---------- moduli ---------- */
+.modulo label, .etichetta { display: block; font-size: 14px; font-weight: 700; margin: 12px 0 0; }
+.modulo label input, .modulo label textarea, .campo { display: block; width: 100%; margin-top: 5px; background: var(--pannello);
+  border: 1px solid var(--linea); border-radius: 12px; padding: 11px 12px; resize: vertical; }
+.campo { margin-top: 0; }
+textarea { line-height: 1.35; }
+.facolt { font-weight: 500; color: var(--tenue); }
+.due { display: flex; gap: 10px; } .due > * { flex: 1; min-width: 0; }
+.segm { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.segm button { padding: 9px 12px; border-radius: 10px; background: var(--chip); font-size: 15px; font-weight: 700; }
+.segm button.on { background: var(--accento); color: var(--accento-testo); }
+.segm.colonna { flex-direction: column; }
+.segm.colonna button { text-align: left; }
+.segm small { display: block; font-weight: 500; font-size: 13px; opacity: .85; }
+.segm.scorre { flex-wrap: nowrap; overflow-x: auto; margin: 8px -16px 10px; padding: 0 16px; scrollbar-width: none; }
+.segm.scorre button { white-space: nowrap; }
+.segm .spingi { margin-left: auto; }
+.contatore { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+.contatore button { width: 44px; height: 44px; border-radius: 12px; background: var(--chip); font-size: 22px; font-weight: 700; text-align: center; }
+.contatore b { font-family: "Barlow Condensed", sans-serif; font-size: 26px; min-width: 48px; text-align: center; }
+.riga-pulsanti { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.riga-pulsanti > * { flex: 1 1 auto; }
+.primario, .secondario, .pericolo { padding: 12px 14px; border-radius: 12px; font-weight: 700; font-size: 16px; text-align: center; }
+.primario { background: var(--accento); color: var(--accento-testo); }
+.secondario { background: var(--chip); color: var(--testo); }
+.pericolo { background: transparent; color: var(--rosso); border: 1px solid var(--linea); }
+.pericolo.conferma { background: var(--rosso); color: #fff; border-color: var(--rosso); }
+.pericolo.piccolo { padding: 6px 12px; font-size: 14px; }
+.largo { display: block; width: 100%; margin-top: 8px; }
+.primario:disabled { opacity: .6; }
+.riquadro { background: var(--chip); border-radius: 16px; padding: 4px 14px 14px; margin-top: 12px; }
+.riquadro h3 { margin: 12px 0 0; font-family: "Barlow Condensed", sans-serif; font-size: 22px; }
+.riquadro label input, .riquadro .secondario { background: var(--pannello); }
+
+/* nuovo contatto (passo 1): pulito, si può passare il telefono alla persona */
+.nuovo label input { font-size: 18px; padding: 13px 14px; }
+.nota-gruppo { background: var(--chip); border-radius: 10px; padding: 8px 12px; font-size: 14px; margin: 4px 0 0; }
+.consenso { display: flex; gap: 12px; align-items: flex-start; width: 100%; background: var(--chip); border-radius: 14px; padding: 12px 14px;
+  margin-top: 18px; font-size: 14px; line-height: 1.4; border: 2px solid transparent; }
+.consenso.on { border-color: var(--ok); }
+.spunta { flex: 0 0 28px; height: 28px; border-radius: 8px; border: 2px solid var(--tenue); display: grid; place-items: center; color: #fff; }
+.spunta .ic { width: 18px; height: 18px; stroke-width: 3; }
+.consenso.on .spunta { background: var(--ok); border-color: var(--ok); }
+
+/* passo 2: appunti */
+.piantato { display: flex; gap: 12px; align-items: center; background: var(--chip); border-radius: 16px; padding: 10px 14px; margin-top: 6px; }
+.piantato p { margin: 0; font-size: 15px; }
+
+/* ---------- scheda contatto ---------- */
+.scheda .testa { display: flex; gap: 12px; align-items: center; }
+.pianta-scheda .pianta { width: 84px; height: 94px; }
+.scheda .stadio { margin: 0 0 2px; font-weight: 700; }
+.scheda .testa p { margin: 0 0 4px; }
+.azioni { display: flex; gap: 8px; margin: 12px 0 4px; }
+.azioni a .ic { width: 19px; height: 19px; color: var(--accento); }
+.azioni a { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 0; border-radius: 12px; background: var(--chip); font-weight: 700; font-size: 15px;
+  color: var(--testo); text-decoration: none; }
+.recapito { margin: 2px 2px 0; }
+.traguardi { display: flex; gap: 6px; }
+.traguardi button { flex: 1; text-align: center; background: var(--chip); border-radius: 12px; padding: 6px 2px 8px; border: 2px solid transparent; }
+.traguardi button svg { display: block; width: 38px; height: 42px; margin: 0 auto 2px; }
+.traguardi button span { display: block; font-size: 13px; font-weight: 700; }
+.traguardi button:not(.on) { filter: grayscale(1); opacity: .6; }
+.traguardi button.on { border-color: var(--ok); }
+.tappa { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--linea); }
+.tappa .cerchio { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--tenue); display: grid; place-items: center; color: #fff; }
+.tappa .cerchio .ic { width: 16px; height: 16px; stroke-width: 3; }
+.tappa.fatta .cerchio { background: var(--ok); border-color: var(--ok); }
+.tappa .t { flex: 1; font-weight: 600; }
+.tappa.fatta .t { text-decoration: line-through; color: var(--tenue); }
+.tappa .q { font-size: 13px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; }
+.tappa .q .ic { width: 14px; height: 14px; }
+.tappa-opzioni { background: var(--chip); border-radius: 0 0 14px 14px; padding: 10px; margin-bottom: 6px; }
+.tappa-opzioni .segm button, .tappa-opzioni .secondario { background: var(--pannello); font-size: 14px; }
+.riga-input { display: block; font-size: 14px; font-weight: 600; margin-top: 10px; }
+.riga-input .campo { margin-top: 4px; }
+.nuova-tappa { display: flex; gap: 8px; margin-top: 10px; }
+.nuova-tappa input { flex: 1; min-width: 0; background: var(--pannello); border: 1px dashed var(--linea); border-radius: 12px; padding: 10px 12px; }
+.nota { display: block; width: 100%; background: var(--pannello); border: 1px solid var(--linea); border-radius: 14px; padding: 10px 12px;
+  font-size: 15px; margin-bottom: 8px; white-space: pre-wrap; }
+.nota b .ic { width: 14px; height: 14px; vertical-align: -2px; margin-left: 2px; }
+.nota b { display: block; font-size: 12px; color: var(--tenue); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; white-space: normal; }
+.nota.aperta .segm { margin-bottom: 8px; }
+.consenso-dato { margin-top: 18px; }
+
+/* ---------- open day ---------- */
+.od { background: var(--pannello); border: 1px solid var(--linea); border-radius: 16px; margin-bottom: 8px; overflow: hidden; }
+.od.aperto { border-color: var(--accento); }
+.od-testa { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; }
+.od-testa .testo { flex: 1; min-width: 0; }
+.od-testa .nome::first-letter { text-transform: uppercase; }
+.od-data { flex: 0 0 52px; height: 56px; border-radius: 12px; background: var(--accento); color: #fff; text-align: center; font-size: 12px; font-weight: 700;
+  text-transform: uppercase; line-height: 1; padding-top: 7px; }
+.od-data b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 28px; }
+.od-conta { text-align: right; font-size: 12px; color: var(--tenue); font-weight: 600; }
+.od-conta b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 24px; color: var(--testo); line-height: 1; }
+.od-corpo { padding: 0 12px 12px; }
+.prenotato { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--linea); }
+.prenotato .testo { flex: 1; min-width: 0; }
+.prenotato .nome { font-size: 16px; }
+.venuto { padding: 7px 10px; border-radius: 10px; background: var(--chip); font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.venuto.on { background: var(--ok); color: #fff; display: inline-flex; align-items: center; gap: 3px; }
+.venuto .ic { width: 15px; height: 15px; stroke-width: 2.5; }
+
+/* ---------- squadra ---------- */
+.numeri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
+.numeri.due-numeri { grid-template-columns: repeat(2, 1fr); }
+.numeri.due-numeri b { font-size: 36px; }
+.numeri .pianta-icona, .numeri .ic { width: 15px; height: 17px; vertical-align: -3px; margin-right: 2px; }
+.numeri div { background: var(--pannello); border: 1px solid var(--linea); border-radius: 12px; padding: 8px 4px; text-align: center; font-size: 12px; font-weight: 700; color: var(--tenue); }
+.numeri b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 30px; line-height: 1.05; color: var(--testo); }
+.riga-membro { display: block; width: 100%; background: var(--pannello); border: 1px solid var(--linea); border-radius: 14px; padding: 9px 12px; margin-bottom: 6px; }
+.riga-membro.on { border-color: var(--accento); }
+.barretta { display: block; height: 7px; border-radius: 4px; background: var(--chip); overflow: hidden; margin-top: 6px; }
+.barretta i { display: block; height: 100%; background: var(--accento); }
+.mini-orto { display: flex; flex-wrap: wrap; gap: 1px; margin-top: 4px; }
+.cerca { margin-top: 2px; }
+
+/* ---------- diario ---------- */
+.scrivi-diario { margin-top: 4px; }
+.umori button { display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; font-size: 14px; }
+.umori .ic { width: 18px; height: 18px; }
+/* Diario «A · come una chat» (2026-10-28) */
+.scrivi { display: flex; align-items: flex-end; gap: 8px; border: 1px solid var(--linea); border-radius: 22px; background: var(--pannello); padding: 6px 6px 6px 14px; }
+.scrivi:focus-within { border: 2px solid var(--accento); padding: 5px 5px 5px 13px; border-radius: 18px; }
+.scrivi textarea { flex: 1; min-width: 0; border: 0; outline: 0; background: none; resize: none; font: inherit; font-size: 16px; line-height: 1.4;
+  color: var(--testo); padding: 5px 0; max-height: 165px; overflow-y: auto; }
+.scrivi .invia { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; background: var(--accento); color: #fff; display: grid; place-items: center; }
+.scrivi .invia .ic { width: 18px; height: 18px; }
+.faccine { display: flex; justify-content: space-between; margin: 8px 6px 0; }
+.faccine button { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: var(--tenue); }
+.faccine button.on { background: var(--accento); color: #fff; } .faccine .ic { width: 22px; height: 22px; }
+.tempo { position: relative; padding-left: 22px; margin-top: 4px; }
+.tempo::before { content: ""; position: absolute; left: 7px; top: 34px; bottom: 0; width: 2px; background: var(--linea); }
+.tempo .sez { margin-left: -22px; }
+.voce { position: relative; display: block; width: 100%; text-align: left; padding: 4px 0 12px; }
+.voce::before { content: ""; position: absolute; left: -20px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--fondo); border: 2px solid var(--accento); }
+.voce .q { display: flex; gap: 6px; align-items: center; font-size: 12.5px; font-weight: 700; color: var(--tenue); } .voce .q .ic { width: 15px; height: 15px; color: var(--accento); }
+.voce .t { display: block; margin-top: 2px; font-size: 15px; line-height: 1.4; white-space: pre-wrap; }
+.voce.aperta textarea { width: 100%; margin-top: 4px; border: 2px solid var(--accento); border-radius: 14px; padding: 8px 10px; font-size: 16px; line-height: 1.4; resize: none; }
+.voce.aperta .faccine { margin: 8px 0 0; }
+.azioni-nota { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.azioni-nota button { padding: 8px 18px; border-radius: 99px; font-size: 15px; }
+
+/* ---------- classe ---------- */
+.invito { text-align: center; }
+.invito .codice { font-family: "Barlow Condensed", sans-serif; font-size: 44px; font-weight: 800; letter-spacing: .06em; margin: 0; color: var(--accento); user-select: all; }
+.invito .etichetta { margin-top: 12px; }
+.riga-lista { display: flex; gap: 6px; align-items: center; padding: 4px 0; }
+.riga-lista .campo { flex: 1; min-width: 0; padding: 9px 10px; }
+.riga-lista .nome { flex: 1; font-weight: 600; }
+.riga-sola { margin: 4px 0; }
+.fondo { margin-top: 28px; }
+.account { margin-top: 24px; text-align: center; }
+
+/* ---------- accesso e vuoti ---------- */
+.corpo.accesso { padding: max(40px, env(safe-area-inset-top)) max(20px, calc(50% - 190px)) 30px; text-align: center; }
+.accesso .logo { width: 90px; height: 100px; margin: 0 auto; }
+.accesso h1 { font-family: "Barlow Condensed", sans-serif; font-size: 44px; margin: 6px 0 0; line-height: 1; }
+.marchio { color: var(--tenue); margin: 4px 0 18px; }
+.marchio i { font-family: "Instrument Serif", Georgia, serif; font-size: 18px; }
+.accesso .modulo { text-align: left; }
+.accesso .primario { width: 100%; margin-top: 16px; }
+.nota-invito { background: var(--chip); border-radius: 12px; padding: 10px; }
+.vuoto { text-align: center; color: var(--tenue); padding: 14px 10px; }
+.vuoto svg { width: 70px; height: 78px; }
+
+/* ---------- avviso in basso ---------- */
+#avviso { position: fixed; left: 16px; right: 16px; bottom: calc(132px + env(safe-area-inset-bottom)); z-index: 20; max-width: 480px; margin: 0 auto;
+  display: flex; align-items: center; gap: 12px; background: #14213D; color: #fff; border-radius: 14px; padding: 12px 14px; font-weight: 600;
+  box-shadow: var(--ombra); animation: entra .2s ease-out; }
+#avviso[hidden] { display: none; }
+#avviso span { flex: 1; }
+#avviso .ic { width: 20px; height: 20px; flex-shrink: 0; }
+#avviso button { color: #8FC8FF; font-weight: 800; }
+@keyframes entra { from { transform: translateY(12px); opacity: 0; } }
+@media (prefers-color-scheme: dark) { #avviso { background: #E8EEF7; color: #14213D; } #avviso button { color: #0A6FC2; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+
+/* il seme disegnato (al posto dell'emoji, che sarebbe una castagna) */
+svg.seme { width: 1.05em; height: 1.05em; vertical-align: -0.15em; }
+
+/* ---------- icone disegnate (icone.js) ---------- */
+.ic { width: 1.25em; height: 1.25em; flex-shrink: 0; }
+.ic.su { transform: rotate(90deg); }
+.ic.gira { animation: gira 1.2s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+.con-ic { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+p.con-ic, h3.con-ic { justify-content: flex-start; }
+.con-ic .ic { width: 18px; height: 18px; }
+.grande .ic { width: 22px; height: 22px; }
+.pianta-icona { display: inline-block; width: 1.3em; height: 1.45em; vertical-align: -0.4em; }
+.pianta-icona svg { display: block; width: 100%; height: 100%; }
+.scheda .info { display: flex; flex-wrap: wrap; gap: 2px 10px; color: var(--tenue); font-size: 14px; margin: 0; }
+.scheda .info span { display: inline-flex; align-items: center; gap: 3px; }
+.scheda .info .ic { width: 15px; height: 15px; }
+.legenda-stadi { line-height: 1.8; }
+
+/* ---------- squadra: statistiche ---------- */
+.imbuto { display: grid; gap: 10px; }
+.imbuto-riga { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; }
+.imbuto-nome { font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.imbuto-val { grid-column: 2; grid-row: 1; font-size: 14px; color: var(--tenue); white-space: nowrap; }
+.imbuto-val b { color: var(--testo); font-size: 16px; }
+.imbuto-barra { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: var(--chip); overflow: hidden; }
+.imbuto-barra i { display: block; height: 100%; background: var(--accento); border-radius: 5px; }
+.riga-stat { display: block; padding: 8px 0; border-bottom: 1px solid var(--linea); }
+.riga-stat .nome { display: flex; align-items: center; gap: 4px; font-weight: 600; }
+.riga-stat .nome .ic { width: 16px; height: 16px; color: var(--tenue); }
+.riga-stat .sotto { display: block; font-size: 13.5px; color: var(--tenue); }
+.fasce { display: flex; flex-wrap: wrap; gap: 6px; }
+.fasce .chip { font-size: 13.5px; padding: 4px 10px; font-weight: 600; }
+.riga-membro { display: flex; align-items: center; gap: 10px; }
+.riga-membro .testo { flex: 1; min-width: 0; }
+.mini-orto .pianta.micro { width: 26px; height: 29px; }
+
+/* ---------- QR ---------- */
+.qr-box { background: #fff; border-radius: 18px; padding: 10px; max-width: 300px; margin: 14px auto; aspect-ratio: 1; display: grid; place-items: center; }
+.qr-box svg { width: 100%; height: auto; display: block; }
+.qr-box .tenue { color: #64748B; }
+.attesa { display: flex; align-items: center; gap: 6px; justify-content: center; }
+
+/* Squadra: interruttore «Piantine» accanto al titolo */
+.sez-riga { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.interruttore-piccolo { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; color: var(--tenue); margin-top: 12px; }
+.interruttore-piccolo i { width: 38px; height: 22px; border-radius: 11px; background: var(--linea); position: relative; transition: background .2s; }
+.interruttore-piccolo i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.interruttore-piccolo.on { color: var(--testo); }
+.interruttore-piccolo.on i { background: var(--accento); }
+.interruttore-piccolo.on i::after { transform: translateX(16px); }
+.riga-membro .mini-orto { margin-top: 5px; }
+
+/* ---------- caselle di testo che crescono mentre scrivi (altezza calcolata da app.js) ---------- */
+textarea { resize: none; overflow: hidden; min-height: 3.2em; }
+
+/* ---------- ricerca del comune (comuni.js) ---------- */
+.campo-comune { position: relative; display: block; }
+.suggerimenti { display: flex; flex-direction: column; margin-top: 4px; border-radius: 12px; overflow: hidden; background: var(--pannello);
+  box-shadow: var(--ombra); position: relative; z-index: 3; }
+.suggerimenti:empty { display: none; }
+.suggerimenti button { padding: 11px 14px; text-align: left; font-weight: 600; font-size: 16px; border-bottom: 1px solid var(--linea); }
+.suggerimenti button:last-child { border-bottom: 0; }
+.suggerimenti small { color: var(--tenue); font-weight: 700; margin-left: 4px; }
+
+/* ---------- open day ---------- */
+.od-dove { display: flex; gap: 6px; align-items: flex-start; font-weight: 600; margin: 4px 0 0; }
+.od-dove .ic { width: 18px; height: 18px; margin-top: 1px; color: var(--accento); }
+a.secondario { text-decoration: none; color: var(--testo); }
+
+/* ---------- scorri a sinistra per cancellare: sotto la riga c'è il fondo rosso con il cestino ---------- */
+.scorri-fondo { position: relative; border-radius: 14px; background: transparent; color: transparent; overflow: hidden;
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding-right: 16px; font-weight: 700; font-size: 14px; }
+.scorri-fondo > .ic { width: 18px; height: 18px; }
+.scorri-fondo.attivo { background: var(--rosso); color: #fff; }   /* il rosso compare solo mentre trascini */
+.scorri-fondo.pronto { filter: brightness(1.1); }
+.scorri-fondo > .scorribile { position: absolute; inset: 0; touch-action: pan-y; background: var(--fondo); color: var(--testo); }
+.scorri-fondo.od-fondo { margin-bottom: 8px; display: block; padding: 0; }
+.scorri-fondo.od-fondo > .ic, .scorri-fondo.od-fondo > span { position: absolute; top: 50%; transform: translateY(-50%); }
+.scorri-fondo.od-fondo > span { right: 16px; } .scorri-fondo.od-fondo > .ic { right: 72px; }
+.scorri-fondo.od-fondo > .od { position: relative; inset: auto; margin: 0; }
+/* le righe dei promemoria hanno altezza propria: il fondo prende la loro misura */
+.scorri-fondo:has(> .tappa), .scorri-fondo:has(> .voce-agenda) { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0; }
+.scorri-fondo:has(> .tappa) > .ic, .scorri-fondo:has(> .tappa) > span,
+.scorri-fondo:has(> .voce-agenda) > .ic, .scorri-fondo:has(> .voce-agenda) > span { grid-area: 1 / 1; justify-self: end; align-self: center; }
+.scorri-fondo:has(> .tappa) > span, .scorri-fondo:has(> .voce-agenda) > span { margin-right: 16px; }
+.scorri-fondo:has(> .tappa) > .ic, .scorri-fondo:has(> .voce-agenda) > .ic { margin-right: 88px; }
+.scorri-fondo > .tappa, .scorri-fondo > .voce-agenda { grid-area: 1 / 1; position: relative; inset: auto; }
+.scorri-fondo:has(> .tappa) { border-radius: 0; }
+.tappa .t { flex: 1; text-align: left; font-weight: 600; }
+
+/* ---------- vista «Da fare» ---------- */
+.voce-agenda { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--linea); border-radius: 14px; background: var(--pannello); }
+.scorri-fondo:has(> .voce-agenda) { margin-bottom: 6px; }
+.voce-agenda .cerchio { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--tenue); }
+.voce-agenda .testo { flex: 1; min-width: 0; text-align: left; }
+.voce-agenda .nome { display: block; font-weight: 700; font-size: 16px; }
+.voce-agenda .sotto { display: block; font-size: 13.5px; color: var(--tenue); }
+.voce-agenda .pianta.micro { width: 26px; height: 29px; }
+.sez.scade { color: var(--rosso); }
+.interruttore button { font-size: 14.5px; }
+
+/* ---------- scheda della persona (A1 · V1, scelta il 2026-10-28) ---------- */
+.sottonome { margin: 0 0 2px; font-size: 14.5px; font-weight: 600; color: var(--tenue); }
+.sottonome b { color: var(--testo); font-weight: 700; }
+.scheda .traguardi { margin-top: 10px; }
+.scheda .traguardi .nuova svg { animation: spunta .9s cubic-bezier(.2, 1.6, .4, 1) both; transform-origin: 50% 100%; }
+.od-box { position: relative; display: flex; align-items: center; gap: 12px; margin-top: 10px; padding: 10px 12px; border-radius: 14px; background: var(--chip); }
+.od-box .testo { flex: 1; min-width: 0; }
+.od-box .nome { display: block; font-size: 17px; font-weight: 700; line-height: 1.2; }
+.od-box .nome::first-letter { text-transform: uppercase; }
+.od-box .sotto { display: block; font-size: 13.5px; font-weight: 600; color: var(--tenue); }
+.od-box .od-data { flex: 0 0 48px; height: 52px; }
+.vuoto-od > .ic { width: 24px; height: 24px; color: var(--accento); margin: 0 6px; }
+.od-scegli { position: absolute; inset: 0; opacity: 0; width: 100%; font-size: 16px; }   /* il menu del telefono si apre toccando il riquadro */
+.linguette { margin: 12px 0 6px; }
+.riga-info { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--linea); font-size: 15px; }
+.riga-info span:first-child { color: var(--tenue); font-weight: 600; flex-shrink: 0; }
+.riga-info span:last-child { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+.modifica-link { display: flex; margin-top: 12px; text-decoration: none; font-weight: 700; font-size: 15px; }
+.modifica-link.rosso { color: var(--rosso); }
+.modifica-link.rosso.conferma { background: var(--rosso); color: #fff; border-radius: 10px; padding: 8px 12px; width: fit-content; }
+.barra-azioni { flex: 0 0 auto; display: flex; gap: 8px; border-top: 1px solid var(--linea); background: var(--pannello);
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); }
+.barra-azioni a, .barra-azioni .spento { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0 6px;
+  border-radius: 12px; background: var(--chip); color: var(--accento); font-size: 12px; font-weight: 700; text-decoration: none; }
+.barra-azioni .ic { width: 22px; height: 22px; }
+.barra-azioni .spento { opacity: .35; }
+
+/* ---------- il nome nella scheda: tocco (o matita) per riscriverlo lì ---------- */
+.nome-tocca { display: inline-flex; align-items: baseline; gap: 6px; max-width: 100%; font: inherit; color: inherit; text-align: left; }
+.nome-tocca > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ic.matitina { width: 16px; height: 16px; color: var(--tenue); flex-shrink: 0; align-self: center; }
+.nome-campo { width: 100%; font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 25px; line-height: 1.1; padding: 2px 8px;
+  border: 1.5px solid var(--accento); border-radius: 10px; background: var(--pannello); color: var(--testo); }
+
+/* ---------- I miei: righe sottili, bottone tondo «nuovo contatto» in alto (scelte il 2026-10-28) ---------- */
+.tondo-nuovo { flex: 0 0 46px; width: 46px; height: 46px; border-radius: 50%; background: var(--accento); color: var(--accento-testo);
+  display: grid; place-items: center; box-shadow: 0 3px 10px rgba(10, 111, 194, .35); }
+.tondo-nuovo .ic { width: 26px; height: 26px; }
+.riga-contatto { display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 0; border-bottom: 1px solid var(--linea); text-align: left; }
+.riga-contatto .testo, .voce-agenda .testo { flex: 1; min-width: 0; }
+.riga-contatto .nome, .voce-agenda .nome { display: block; font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.riga-contatto .sotto, .voce-agenda .sotto { display: block; font-size: 13px; color: var(--tenue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.riga-contatto .destra { display: flex; gap: 4px; flex-shrink: 0; }
+.pianta.riga-pianta { width: 30px; height: 34px; flex: 0 0 30px; }
+/* Da fare: stesse righe della Lista */
+.voce-agenda { border: 0; border-radius: 0; border-bottom: 1px solid var(--linea); padding: 7px 0; background: var(--fondo); gap: 10px; }
+.scorri-fondo:has(> .voce-agenda) { margin-bottom: 0; border-radius: 0; }
+.voce-agenda .quando { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.voce-agenda .quando .ic { width: 14px; height: 14px; }
+
+/* ---------- il foglio dal basso (open day e promemoria): Annulla · titolo · Salva, Elimina in fondo ---------- */
+.foglio-velo { position: fixed; inset: 0; z-index: 30; background: rgba(20, 33, 61, .38); animation: compare .2s ease-out; }
+.foglio { position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--fondo); border-radius: 20px 20px 0 0; box-shadow: 0 -6px 24px rgba(0, 0, 0, .2);
+  padding: 0 max(16px, calc(50% - 304px)) calc(18px + env(safe-area-inset-bottom)); animation: sale .25s cubic-bezier(.2, .8, .3, 1); }
+@keyframes sale { from { transform: translateY(40%); opacity: .4; } }
+@keyframes compare { from { opacity: 0; } }
+.maniglia { width: 40px; height: 5px; border-radius: 3px; background: var(--linea); margin: 8px auto 2px; }
+.testa-foglio { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0 8px; position: sticky; top: 0; background: var(--fondo); z-index: 2; }
+.testa-foglio .ann { color: var(--accento); font-size: 17px; font-weight: 600; padding: 6px 2px; }
+.testa-foglio .tit { font-weight: 700; font-size: 17px; text-align: center; }
+.testa-foglio .salva { color: var(--accento-testo); background: var(--accento); font-size: 16px; font-weight: 700; padding: 8px 16px; border-radius: 99px; }
+.foglio .riassunto { font-family: "Barlow Condensed", sans-serif; font-size: 24px; font-weight: 800; color: var(--accento); margin: 2px 0 8px; }
+.foglio .riassunto::first-letter { text-transform: uppercase; }
+.foglio .titolo-tappa { font-size: 18px; font-weight: 600; margin: 2px 0 10px; }
+.elimina-foglio { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 16px; padding: 13px;
+  border-radius: 12px; background: var(--chip); color: var(--rosso); font-weight: 700; font-size: 16px; }
+.elimina-foglio .ic { width: 18px; height: 18px; }
+.senza-data { display: block; margin: 10px auto 0; font-size: 14.5px; }
+
+/* ---------- le due ruote (giorno · orario ogni 15 minuti) ---------- */
+.titoli-ruote { display: flex; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--tenue); text-transform: uppercase; letter-spacing: .06em; text-align: center; margin-bottom: 4px; }
+.titoli-ruote span { flex: 1; } .titoli-ruote .g { flex: 2; }
+.ruote { position: relative; display: flex; gap: 2px; height: 200px; border-radius: 16px; background: var(--chip); overflow: hidden; }
+.ruote::before { content: ""; position: absolute; left: 8px; right: 8px; top: 80px; height: 40px; border-radius: 10px; background: var(--pannello); box-shadow: 0 1px 5px rgba(0, 0, 0, .1); }
+.ruote::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(var(--chip) 0%, transparent 35%, transparent 65%, var(--chip) 100%); }
+.ruota { position: relative; flex: 1; overflow-y: auto; scroll-snap-type: y mandatory; padding: 80px 0; scrollbar-width: none; text-align: center; overscroll-behavior: contain; }
+.ruota::-webkit-scrollbar { display: none; }
+.ruota.g { flex: 2; }
+.ruota > div { height: 40px; line-height: 40px; scroll-snap-align: center; font-size: 19px; font-weight: 600; color: var(--tenue); white-space: nowrap; transition: color .15s; }
+.ruota > div.on { color: var(--testo); font-weight: 800; }
+.riga-pulsanti.tre > * { flex: 1 1 0; padding-left: 6px; padding-right: 6px; }
+
+/* ---------- Open day «A · righe sottili» (2026-10-28) ---------- */
+.riga-od { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 0; border-bottom: 1px solid var(--linea); text-align: left; }
+.riga-od .testo { flex: 1; min-width: 0; }
+.riga-od .nome { display: block; font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.riga-od .nome::first-letter { text-transform: uppercase; }
+.riga-od .sotto { display: block; font-size: 13px; color: var(--tenue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dmini { flex: 0 0 40px; text-align: center; line-height: 1; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--tenue); }
+.dmini b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 25px; color: var(--accento); }
+.piante-od { display: flex; align-items: flex-end; flex-shrink: 0; }
+.piante-od .pianta.micro { width: 18px; height: 21px; margin-left: -4px; }
+.num-od { font-size: 15px; font-weight: 800; min-width: 14px; text-align: right; }
+.scorri-fondo:has(> .riga-od) { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0; border-radius: 0; }
+.scorri-fondo:has(> .riga-od) > .ic, .scorri-fondo:has(> .riga-od) > span { grid-area: 1 / 1; justify-self: end; align-self: center; }
+.scorri-fondo:has(> .riga-od) > span { margin-right: 16px; } .scorri-fondo:has(> .riga-od) > .ic { margin-right: 76px; }
+.scorri-fondo > .riga-od { grid-area: 1 / 1; position: relative; inset: auto; }
+.gia-fatti { margin: 14px 0 6px; color: var(--tenue); font-weight: 700; text-decoration: none; }
+.od-dove-foglio { margin: -4px 0 10px; font-size: 15px; font-weight: 600; }
+.foglio .prenotato { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 0; border-bottom: 1px solid var(--linea); }
+
+/* ---------- scegliere l'open day di una persona: prima la città, poi la data (2026-10-28) ---------- */
+button.od-box { width: 100%; text-align: left; }
+.spazio-testa { width: 52px; display: flex; justify-content: flex-end; }
+/* «＋» azzurro nel foglio «Open day di …»: nuovo open day in GENERALE (scelta N2; in fondo resta la scorciatoia della città) */
+.piu-testa { width: 36px; height: 36px; border-radius: 50%; background: var(--accento); color: #fff; display: grid; place-items: center; box-shadow: 0 3px 10px rgba(10, 111, 194, .35); }
+.piu-testa .ic { width: 20px; height: 20px; stroke-width: 2.6; }
+.foglio .segm.scorre small { font-weight: 600; opacity: .8; }
+.od-scelta { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px; margin-bottom: 8px;
+  border: 1.5px solid var(--linea); border-radius: 16px; background: var(--pannello); }
+.od-scelta.on { border-color: var(--accento); background: var(--chip); }
+.od-scelta .testo { flex: 1; min-width: 0; }
+.od-scelta .nome { display: block; font-size: 16.5px; font-weight: 700; } .od-scelta .nome::first-letter { text-transform: uppercase; }
+.od-scelta .sotto { display: block; font-size: 13px; color: var(--tenue); }
+.od-scelta .od-data { flex: 0 0 50px; height: 54px; }
+.spunta-od { flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--linea); display: grid; place-items: center; }
+.od-scelta.on .spunta-od { background: var(--accento); border-color: var(--accento); color: #fff; }
+.spunta-od .ic { width: 15px; height: 15px; stroke-width: 3; }
+.nuovo-od { display: flex; margin: 4px 0 10px; font-weight: 700; text-decoration: none; }
+
+/* ---------- Squadra «B» rivista (2026-10-28) ---------- */
+.eroe { background: var(--accento); color: #fff; border-radius: 18px; padding: 14px 0; margin-top: 4px; }
+.due-num { display: flex; align-items: stretch; }
+.due-num > div { flex: 1; text-align: center; } .due-num > div + div { border-left: 1px solid rgba(255, 255, 255, .3); }
+.due-num b { display: block; font-family: "Barlow Condensed", sans-serif; font-weight: 800; line-height: 1; }
+.due-num .n-uno b { font-size: 56px; } .due-num .n-due b { font-size: 40px; margin-top: 12px; opacity: .9; }
+.due-num span { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+.eroe .fasi { display: flex; justify-content: space-between; margin: 12px 14px 0; background: rgba(255, 255, 255, .14); border-radius: 12px; padding: 6px 10px 4px; }
+.eroe .fasi span { display: flex; flex-direction: column; align-items: center; font-weight: 800; font-size: 17px; }
+.eroe .fasi svg { width: 32px; height: 36px; } .eroe .fasi small { font-size: 10.5px; }
+.anelli { display: flex; gap: 6px; margin-top: 16px; }
+.anello { flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: var(--tenue); line-height: 1.25; }
+.anello svg { width: 78px; height: 78px; display: block; margin: 0 auto 4px; }
+.anello text { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 22px; fill: var(--testo); }
+/* piantine decorative accanto al titolo «Squadra»: sospese, i vasetti toccano il riquadro azzurro */
+/* piantine decorative appoggiate sul riquadro, all'altezza della fine della parola «Squadra» */
+.eroe { position: relative; }
+.eroe.con-vasi { margin-top: 34px; }
+.vasi-eroe { position: absolute; bottom: 100%; left: 118px; margin-bottom: -4px; display: flex; align-items: flex-end; gap: 1px; pointer-events: none; }
+.vasi-eroe svg { width: 36px; height: 41px; }
+.centrato { justify-content: center; text-align: center; }
+.riga-persona { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 0; border-bottom: 1px solid var(--linea); text-align: left; }
+.riga-persona .testo { flex: 1; min-width: 0; } .riga-persona .nome { display: block; font-weight: 700; font-size: 16px; }
+.iniziale { flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%; background: var(--chip); display: grid; place-items: center; font-weight: 800; color: var(--accento); }
+.tre-num { display: flex; gap: 10px; font-size: 13px; color: var(--tenue); font-weight: 600; } .tre-num b { color: var(--testo); }
+.riga-tutti { display: flex; align-items: center; gap: 8px; width: 100%; margin: 14px 0 6px; padding: 12px; border-radius: 12px; background: var(--chip); font-weight: 700; color: var(--accento); text-align: left; }
+.riga-tutti span { margin-left: auto; color: var(--tenue); font-weight: 600; }
+.torna-squadra { display: flex; margin: 0 0 8px; font-weight: 700; text-decoration: none; }
+
+/* ---------- tre tipi di open day (2026-10-28, anteprima/openday-tipi2.html, versione A) ---------- */
+.segm2 { display: flex; background: var(--chip); border-radius: 12px; padding: 3px; margin: 2px 0 10px; }
+.segm2 button { flex: 1; display: flex; gap: 6px; justify-content: center; align-items: center; padding: 8px 4px; border-radius: 9px; font-weight: 700; font-size: 14.5px; color: var(--tenue); }
+.segm2 button.on { background: var(--pannello); color: var(--testo); box-shadow: 0 1px 4px rgba(0, 0, 0, .12); }
+.segm2 .ic { width: 17px; height: 17px; }
+.campo-ic { position: relative; display: block; flex: 1; min-width: 0; }
+.campo-ic > .ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); margin-top: 2.5px; width: 18px; height: 18px; color: var(--tenue); pointer-events: none; z-index: 1; }
+.modulo .campo-ic input { padding-left: 38px; }
+.riga-citta { display: flex; gap: 8px; align-items: flex-end; }
+.mini-segm { display: flex; flex: 0 0 auto; background: var(--chip); border-radius: 12px; padding: 3px; height: 46px; }
+.mini-segm button { display: grid; place-items: center; width: 44px; border-radius: 9px; color: var(--tenue); }
+.mini-segm button.on { background: var(--accento); color: #fff; }
+.mini-segm .ic { width: 19px; height: 19px; }
+.zoom-od { display: inline-flex; gap: 3px; align-items: center; color: var(--accento); font-weight: 700; vertical-align: bottom; }
+.zoom-od .ic { width: 15px; height: 15px; }
+.ic.mini { width: 15px; height: 15px; vertical-align: -2px; margin-right: 4px; }
+
+/* ---------- messaggi di conferma dell'open day (anteprima/messaggi.html) ---------- */
+.altre-msg { display: inline-flex; gap: 4px; align-items: center; color: var(--accento); font-size: 15px; font-weight: 700; padding: 6px 2px; }
+.altre-msg .ic { width: 18px; height: 18px; }
+.info-msg { margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--tenue); }
+.info-msg .ic { width: 15px; height: 15px; color: var(--accento); }
+.chi-msg { display: grid; grid-template-rows: repeat(2, auto); grid-auto-flow: column; grid-auto-columns: max-content; gap: 6px; margin: 6px -16px 8px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.chi-msg::-webkit-scrollbar { display: none; }
+.chi-msg button { padding: 7px 12px; border-radius: 10px; background: var(--chip); color: var(--testo); font-size: 14px; font-weight: 700; }
+.chi-msg button.on { background: var(--accento); color: var(--accento-testo); }
+.modulo input.altro-msg { display: block; width: 100%; margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--linea); background: var(--pannello); color: var(--testo); font: inherit; font-size: 16px; }
+.msg { border: 1.5px solid var(--linea); border-radius: 16px; margin-bottom: 10px; overflow: hidden; }
+.num-msg { padding: 10px 12px 0; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tenue); }
+.modulo textarea.msg-testo { display: block; width: 100%; margin: 0; padding: 4px 12px 10px; border: 0; border-radius: 0; background: transparent; color: var(--testo); font: inherit; font-size: 15px; line-height: 1.38; resize: none; overflow: hidden; }
+.piede-msg { display: flex; border-top: 1px solid var(--linea); }
+.piede-msg button { flex: 1; display: flex; gap: 6px; justify-content: center; align-items: center; padding: 11px; font-size: 15px; font-weight: 700; }
+.piede-msg .copia { color: var(--accento); border-right: 1px solid var(--linea); }
+.piede-msg .wa { color: var(--ok); }
+.piede-msg .ic { width: 18px; height: 18px; }
+
+/* ---------- open day: sede fissa e calendario (anteprima/openday-calendario.html) ---------- */
+.sede-riga { display: flex; gap: 10px; align-items: center; background: var(--chip); border-radius: 14px; padding: 10px 12px; margin: 4px 0 6px; }
+.sede-riga > .ic { color: var(--accento); }
+.sede-riga .t { flex: 1; min-width: 0; } .sede-riga b { display: block; font-size: 16px; } .sede-riga small { color: var(--tenue); font-weight: 600; font-size: 13.5px; }
+.sede-riga .mini-segm { height: 38px; background: var(--pannello); } .sede-riga .mini-segm button { width: 38px; }
+.mod-sede { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--tenue); } .mod-sede .ic { width: 17px; height: 17px; }
+.sedi-od { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 8px; }
+.sede-scelta { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; border: 1.5px solid var(--linea); border-radius: 14px; padding: 12px; }
+.sede-scelta .ic { color: var(--accento); } .sede-scelta b { display: block; font-size: 16.5px; } .sede-scelta small { color: var(--tenue); font-weight: 600; font-size: 13.5px; }
+.cal { margin: 2px 0 4px; }
+.cal-testa { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.cal-testa b { font-size: 15px; text-transform: capitalize; }
+.cal-frecce { display: flex; gap: 4px; }
+.cal-frecce button { width: 34px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 9px; background: var(--chip); color: var(--accento); font-weight: 800; font-size: 17px; }
+.cal-frecce .cal-oggi { width: auto; padding: 0 10px; font-size: 13px; }
+.cal-gg { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; font-weight: 700; color: var(--tenue); text-transform: uppercase; letter-spacing: .04em; padding: 2px 0; }
+.cal-gr { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-gr button { position: relative; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 11px; color: var(--testo); font-size: 16px; font-weight: 600; }
+.cal-gr button.passato { color: var(--tenue); opacity: .35; }
+.cal-gr button.oggi { box-shadow: inset 0 0 0 1.5px var(--accento); }
+.cal-gr button.on { background: var(--accento); color: var(--accento-testo); font-weight: 800; }
+.cal-gr button.primo::before { content: attr(data-m); position: absolute; top: 1px; left: 0; right: 0; font-size: 8.5px; font-weight: 800; text-transform: uppercase; color: var(--accento); line-height: 1; }
+.cal-gr button.on.primo::before { color: var(--accento-testo); }
+.cal-gr button.ha::after { content: ""; position: absolute; bottom: 4px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--accento); }
+.cal-gr button.on.ha::after { background: var(--accento-testo); }
+.cal-leg { font-size: 12px; color: var(--tenue); font-weight: 600; display: flex; gap: 5px; align-items: center; margin: 2px 2px 0; }
+.cal-leg i { width: 6px; height: 6px; border-radius: 50%; background: var(--accento); display: inline-block; }
+.ruote.una { height: 120px; } .ruote.una::before { top: 40px; } .ruote.una .ruota { padding: 40px 0; }
