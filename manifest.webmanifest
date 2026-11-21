@@ -1,0 +1,6 @@
+{ "name": "Volantinaggio · LEARNIS Mind", "short_name": "Volantinaggio", "start_url": "./", "scope": "./", "display": "standalone",
+  "background_color": "#FFFFFF", "theme_color": "#0A6FC2", "lang": "it",
+  "icons": [{ "src": "icona-180.png", "sizes": "180x180", "type": "image/png" },
+            { "src": "icona-192.png", "sizes": "192x192", "type": "image/png" },
+            { "src": "icona-512.png", "sizes": "512x512", "type": "image/png" },
+            { "src": "icona.svg", "sizes": "any", "type": "image/svg+xml" }] }
